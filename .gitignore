@@ -1,0 +1,4 @@
+# ignore the build directories, except the config files
+/*/*
+!*.ini
+!*.hdp
