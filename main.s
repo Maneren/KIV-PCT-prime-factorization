@@ -19,9 +19,11 @@ rs:
 	.data
 	.align 2
 
+	; TODO: revert back to reading the input
+
 input_buffer:
 	;      .space 20
-	.asciz "101\n"
+	.asciz "65530\n"
 
 output_buffer:
 	.space 20
@@ -92,6 +94,7 @@ end:
 
 	; decodes a decimal number (max value is word)
 
+	; <- R1 - radix
 	; <- @ER6 - pointer to buffer ending with CR
 	; -> ER0   - number
 
@@ -133,15 +136,17 @@ ascii_decode_end:
 
 	; <- R0 - number
 	; <- R1 - radix
-	; -> @ER6 - pointer to buffer
+	; <- @ER6 - pointer to buffer
 
 ascii_encode:
 	push.l ER2
 
-	;     clear R2
-	xor.w R2, R2
+	;     clear ER2
+	;     R2 is used as a temporary register for char conversion
+	;     E2 is used as a counter for the number of chars
+	xor.l ER2, ER2
 
-ascii_encode_loop:
+ascii_encode_push_loop:
 	divxu.w R1, ER0
 
 	mov.w E0, R2
@@ -149,15 +154,38 @@ ascii_encode_loop:
 
 	;     convert the number to ascii
 	add.b #'0', R2L
-	;     store the char
+
+	;      store the char on the stack
+	;      TODO: two characters can be pushed at once to save space
+	push.w R2
+
+	;     increase the character counter
+	inc.w #1, E2
+
+	;     loop until the number is 0
+	cmp.l #0, ER0
+	bne   ascii_encode_push_loop
+
+ascii_encode_pop_loop:
+	; pop all chars from the stack to the output buffer
+
+	;     pop the char
+	pop.w R2
+
+	;     store the char in the output buffer
 	mov.b R2L, @ER6
 
 	;     move the pointer
 	inc.l #1, ER6
 
-	;     if there is nothing left, exit
-	cmp.l #0, ER0
-	bne   ascii_encode_loop
+	;     decrease the counter
+	dec.w #1, E2
+
+	;     loop until the counter is 0
+	;     TODO: perhaps the check can be simplified to just one bxx
+	;     but it depends on how dec.w sets the flags
+	cmp.w #0, E2
+	bne   ascii_encode_pop_loop
 
 ascii_encode_end:
 	pop.l ER2
