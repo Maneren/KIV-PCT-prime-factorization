@@ -127,32 +127,11 @@ generate_prime_sieve:
 	;      save the pointer
 	push.l ER6
 
-	;     start iteration at 2
-	mov.w #2, E0
-	inc.l #2, ER6
-
-	;     filler value
+	;     set all bytes in sieve to 1
 	mov.w #0xFFFF, R0
-
-generate_prime_sieve_fill_loop:
-	; set all bytes in sieve to 1
-
-	;     loop until the counter is 256
-	cmp.w #256, E0
-	bge   generate_prime_sieve_fill_loop_end
-
-	;     store the byte
-	mov.w R0, @ER6
-
-	;     increase the pointer
+	mov.w #254, E0
 	inc.l #2, ER6
-
-	;     increase the counter
-	add.w #2, E0
-
-	jmp generate_prime_sieve_fill_loop
-
-generate_prime_sieve_fill_loop_end:
+	jsr   @fill_buffer
 
 	;     reset the pointer
 	pop.l ER6
@@ -330,6 +309,31 @@ ascii_encode_pop_loop:
 
 ascii_encode_end:
 	pop.l ER2
+	rts
+
+	; fn fill_buffer
+
+	; fills the buffer with given value
+	; length has to be whole words
+
+	; <- R0 - value
+	; <- E0 - number of words
+	; <- @ER6 - pointer to buffer
+
+fill_buffer:
+	;     if
+	cmp.w #0, E0
+	beq   fill_buffer_end
+
+fill_buffer_loop:
+	;     store the byte
+	mov.w R0, @ER6
+
+	inc.l #2, ER6
+	dec.w #2, E0
+	bne   fill_buffer_loop
+
+fill_buffer_end:
 	rts
 
 	.end
