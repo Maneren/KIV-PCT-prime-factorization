@@ -25,11 +25,14 @@ sieve:
 primes:
 	.space 64
 
+factorized_buffer:
+	.space 16
+
 	; TODO: revert back to reading the input
 
 input_buffer:
 	;      .space 20
-	.asciz "65530\n"
+	.asciz "32001\n"
 
 output_buffer:
 	.space 20
@@ -72,27 +75,38 @@ _start:
 	; loop for the rest of the program
 
 main_loop:
-	;     show prompt
-	mov.w #PUTS, R0
-	mov.l #ptr_prompt, ER1
-	jsr   @syscall
+	; ; show prompt
+	; mov.w #PUTS, R0
+	; mov.l #ptr_prompt, ER1
+	; jsr   @syscall
 
-	;     read input
-	mov.w #GETS, R0
-	mov.l #ptr_input, ER1
-	jsr   @syscall
+	; ; read input
+	; mov.w #GETS, R0
+	; mov.l #ptr_input, ER1
+	; jsr   @syscall
 
 	;     IO is in base 10
 	mov.w #10, R1
 
-	mov.l @ptr_input, ER6
+	mov.l #input_buffer, ER6
 	jsr   @ascii_decode
 
-	cmp.w #2, R0
-	blt   main_loop
+	;     TODO: figure out how to do unsigned comparison
+	cmp.w #0, R0
+	beq   end
 
-	mov.l @ptr_output, ER6
+	;     print 'n='
+	mov.l #output_buffer, ER6
 	jsr   @ascii_encode
+
+	mov.b #'=', R2L
+	mov.b R2L, @ER6
+	inc.l #1, ER6
+
+	;     print the factorization
+	mov.w R0, R3
+	mov.l #primes, ER5
+	jsr   @prime_factorize
 
 	;     add newline
 	mov.b #'\n', R2L
@@ -210,6 +224,124 @@ generate_prime_sieve_mark_loop_end:
 	pop.l ER6
 	rts
 
+	; fn prime_factorize
+
+	; factorizes a number into its prime factors
+	; write directly to the output buffer
+
+	; <- R3 - number
+	; <- @ER5 - pointer to primes array
+	; <- @ER6 - pointer to output buffer
+
+	; TODO: if we run out of primes, the remaining number itself is a prime
+	; and we should print it out as well
+
+prime_factorize:
+	push.l ER2
+	push.l ER3
+	push.l ER4
+
+	;     prepare the registers
+	xor.w E3, E3
+	xor.l ER2, ER2
+	xor.l ER4, ER4
+
+	; loop through the primes and try to divide the number
+	; until the number is 1
+
+prime_factorize_loop:
+
+	;     load the prime
+	mov.b @ER5, R2L
+
+	cmp.b #0, R2L
+	beq   prime_factorize_print_remaining
+
+prime_factorize_division_loop:
+
+	;     save the current value
+	mov.w R3, R4
+
+	;       divide the number by the prime
+	divxu.w R2, ER3
+
+	;     if the remain after division isn't 0, end the loop
+	cmp.w #0, E3
+	bne   prime_factorize_division_loop_end
+
+	;     increase the power
+	inc.w #1, E4
+
+	jmp prime_factorize_division_loop
+
+prime_factorize_division_loop_end:
+
+	;     restore the number
+	xor.w E3, E3
+	mov.w R4, R3
+
+	;     if the power is 0, skip printing
+	cmp.w #0, E4
+	beq   prime_factorize_division_loop_skip_print
+
+	;     write the prime to the output buffer
+	mov.w R2, R0
+	jsr   @ascii_encode
+
+	;     if power is 1, skip printing it
+	cmp.w #1, E4
+	beq   prime_factorize_division_loop_skip_print_power
+
+	mov.b #'^', R0L
+	mov.b R0L, @ER6
+	inc.l #1, ER6
+
+	;     write the power to the output buffer
+	mov.w E3, R0
+	jsr   @ascii_encode
+
+prime_factorize_division_loop_skip_print_power:
+	;     print '*'
+	mov.b #'*', R0L
+	mov.b R0L, @ER6
+	inc.l #1, ER6
+
+prime_factorize_division_loop_skip_print:
+
+	;     reset the power
+	xor.w E4, E4
+
+	;     if the number is 1, we are done
+	cmp.w #1, R3
+	beq   prime_factorize_end
+
+	;     move to next prime
+	inc.l #1, ER5
+
+	jmp prime_factorize_loop
+
+prime_factorize_print_remaining:
+	;     write the number to the output buffer
+	mov.w R3, R0
+	jsr   @ascii_encode
+
+prime_factorize_end:
+	;     if we have an asterisk at the end, remove it
+	mov.b @ER6, R0L
+	cmp.b #'*', R0L
+	beq   prime_factorize_end_skip_asterisk
+
+	mov.b #0, R0L
+	mov.b R0L, @ER6
+
+prime_factorize_end_skip_asterisk:
+
+	pop.l ER3
+	pop.l ER2
+	pop.l ER4
+
+	rts
+
 	; fn ascii_decode
 
 	; decodes a decimal number (max value is word)
@@ -259,6 +391,7 @@ ascii_decode_end:
 	; <- @ER6 - pointer to buffer
 
 ascii_encode:
+	push.l ER0
 	push.l ER2
 
 	;     clear ER2
@@ -309,15 +442,16 @@ ascii_encode_pop_loop:
 
 ascii_encode_end:
 	pop.l ER2
+	pop.l ER0
 	rts
 
 	; fn fill_buffer
 
 	; fills the buffer with given value
-	; length has to be whole words
+	; length has to be even number of bytes
 
 	; <- R0 - value
-	; <- E0 - number of words
+	; <- E0 - number of bytes
 	; <- @ER6 - pointer to buffer
 
 fill_buffer:
