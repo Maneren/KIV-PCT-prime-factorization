@@ -28,11 +28,9 @@ primes:
 factorized_buffer:
 	.space 16
 
-	; TODO: revert back to reading the input
-
 input_buffer:
-	;      .space 20
-	.asciz "32001\n"
+	.space 20
+	;      .asciz "32001\n"
 
 output_buffer:
 	.space 20
@@ -75,15 +73,15 @@ _start:
 	; loop for the rest of the program
 
 main_loop:
-	; ; show prompt
-	; mov.w #PUTS, R0
-	; mov.l #ptr_prompt, ER1
-	; jsr   @syscall
+	;     show prompt
+	mov.w #PUTS, R0
+	mov.l #ptr_prompt, ER1
+	jsr   @syscall
 
-	; ; read input
-	; mov.w #GETS, R0
-	; mov.l #ptr_input, ER1
-	; jsr   @syscall
+	;     read input
+	mov.w #GETS, R0
+	mov.l #ptr_input, ER1
+	jsr   @syscall
 
 	;     IO is in base 10
 	mov.w #10, R1
@@ -297,7 +295,7 @@ prime_factorize_division_loop_end:
 	inc.l #1, ER6
 
 	;     write the power to the output buffer
-	mov.w E3, R0
+	mov.w E4, R0
 	jsr   @ascii_encode
 
 prime_factorize_division_loop_skip_print_power:
@@ -327,9 +325,12 @@ prime_factorize_print_remaining:
 
 prime_factorize_end:
 	;     if we have an asterisk at the end, remove it
-	mov.b @ER6, R0L
+	mov.b @(-1, ER6), R0L
+
 	cmp.b #'*', R0L
-	beq   prime_factorize_end_skip_asterisk
+	bne   prime_factorize_end_skip_asterisk
+
+	dec.l #1, ER6
 
 	mov.b #0, R0L
 	mov.b R0L, @ER6
@@ -361,7 +362,7 @@ ascii_decode:
 	xor.w R1, R1
 
 ascii_decode_loop:
-	mov.b @ER6, R1L
+	mov.b @ER6+, R1L
 
 	;     if the char is CR, we are done
 	cmp.b #'\n', R1L
@@ -373,9 +374,8 @@ ascii_decode_loop:
 	mulxu.w E1, ER0
 	;       add current digit
 	add.w   R1, R0
-	;       move to the next digit
-	inc.l   #1, ER6
-	jmp     @ascii_decode_loop
+
+	jmp @ascii_decode_loop
 
 ascii_decode_end:
 	pop.l ER1
