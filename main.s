@@ -30,7 +30,6 @@ factorized_buffer:
 
 input_buffer:
 	.space 20
-	;      .asciz "32001\n"
 
 output_buffer:
 	.space 20
@@ -88,10 +87,6 @@ main_loop:
 
 	mov.l #input_buffer, ER6
 	jsr   @ascii_decode
-
-	;     TODO: figure out how to do unsigned comparison
-	cmp.w #0, R0
-	beq   end
 
 	;     print 'n='
 	mov.l #output_buffer, ER6
