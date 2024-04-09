@@ -231,9 +231,6 @@ generate_prime_sieve_mark_loop_end:
 	; <- @ER5 - pointer to primes array
 	; <- @ER6 - pointer to output buffer
 
-	; TODO: if we run out of primes, the remaining number itself is a prime
-	; and we should print it out as well
-
 prime_factorize:
 	push.l ER2
 	push.l ER3
@@ -409,7 +406,6 @@ ascii_encode_push_loop:
 	add.b #'0', R2L
 
 	;      store the char on the stack
-	;      TODO: two characters can be pushed at once to save space
 	push.w R2
 
 	;     increase the character counter
@@ -434,11 +430,8 @@ ascii_encode_pop_loop:
 	;     decrease the counter
 	dec.w #1, E2
 
-	;     loop until the counter is 0
-	;     TODO: perhaps the check can be simplified to just one bxx
-	;     but it depends on how dec.w sets the flags
-	cmp.w #0, E2
-	bne   ascii_encode_pop_loop
+	;   loop until the counter is 0
+	bne ascii_encode_pop_loop
 
 ascii_encode_end:
 	pop.l ER2
