@@ -25,9 +25,6 @@ sieve:
 primes:
 	.space 64
 
-factorized_buffer:
-	.space 16
-
 input_buffer:
 	.space 20
 
