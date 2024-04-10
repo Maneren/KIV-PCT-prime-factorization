@@ -1,0 +1,176 @@
+% LTeX: language=cs-CZ
+\documentclass[12pt]{article}
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+\usepackage{hyphsubst}
+\usepackage{graphicx}
+\usepackage{indentfirst}
+\selectlanguage{czech}
+\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+
+\hypersetup{
+    colorlinks=true,
+    linkcolor=black,
+    filecolor=magenta,      
+    urlcolor=blue,
+    pdftitle={Prvočíselný rozklad},
+    pdfpagemode=FullScreen,
+}
+\urlstyle{same}
+
+\usepackage{xcolor}
+\definecolor{light-gray}{gray}{0.95}
+\newcommand{\code}[1]{\colorbox{light-gray}{\mbox{\texttt{#1}}}}
+
+\begin{document}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{pic/LOGO_KIV_CMYK.png}
+\end{figure}
+
+\begin{center}
+    \LARGE{Prvočíselný rozklad}\\
+    \vspace{.5cm}
+\end{center}
+
+\vfill
+
+\noindent
+Západočeská univerzita v Plzni \hfill Pavel Altmann\\
+Katedra informatiky a výpočetní techniky \hfill letní semestr\\
+Semestrální práce - PCT \hfill \today
+\thispagestyle{empty}
+
+\newpage
+\setcounter{page}{1}
+
+\tableofcontents
+
+\newpage
+
+\section{Zadání}
+
+
+Číslo 15 - "Rozklad čísla na prvočinitele"
+
+Uživatel zadá číslo v rozsahu 2-65536 a program vypíše jeho rozklad na prvočinitele.
+
+\subsection{Navrhnuté řešení}
+
+Program nejprve vygeneruje Erastothenovo síto a pomocí něj najde prvočísla v rozsahu 2-256.
+Poté v nekonečné smyčce načítá vstup od uživatele, převádí ho na číslo a vypisuje příslušný
+rozklad.
+
+Program funguje se všemi čísly v zadaném rozsahu, ale očekává od uživatele správný vstup.
+V opačném případě buď vrací chybu nebo špatný výsledek.
+
+\section{Vývoj a použité technologie}
+
+K psaní programu byl využitý textový editor Neovim s rozšířením pro jazyky symbolických
+adres. K testování a debugování bylo následně použito vývojové prostředí HEW (High-performace
+embedded workshop) a simulátor procesoru H8S.
+
+Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
+
+\section{Implementace řešení}
+
+\subsection{Hlavní část programu}
+
+% make the text monospace
+
+
+Hlavní část programu je rozdělena na 2 části: inicializace a smyčka. Inicializace programu
+zahrnuje především spuštění podprogramu \code{generate\_prime\_sieve}, který vygeneruje seznam 
+prvočísel. Smyčka pak postupně požádá uživatele o vstup, vstup zpracuje pomocí podprogramu 
+\code{ascii\_decode}, který zadané číslo převede z textu na binarní hodnotu. Následně je zavolán
+podprogram \code{prime\_factorize}, který vypočítá samotný prvočíselný rozklad. Nakonec je
+rozklad vytištěn a smyčka se spustí znovu od začátku.
+
+
+\section{DARPA Grand Challenge}
+Její počátek je v roce 2003, kdy americká Agentura ministerstva obrany pro pokročilé výzkumné projekty
+(DARPA) nabídla odměnu 1 milion dolarů, tomu kdo dokáže sestavit autonomní vozidlo schopné projet
+150 mil dlouhou trať vedoucí v Nevadské poušti.
+
+První ročník se konal v roce 2004 ale během závodu se ukázalo, že je to zatím úkol příliš náročný
+a nakonec žádné vozidlo závod nedokázalo dokončit (nejlepší ujelo necelých 5\% trati) a tak DARPA
+zdvojnásobila výhru pro další ročník na 2 miliony.
+
+\section{Stanfordský závodní tým}
+Byl založen ředitelem Stanfordské laboratoře umělé inteligence, profesorem Sebastianem Thrunem,
+údajně proto, že byl zklamaný výsledky prvního závodu a chtěl ukázat, co robotika a umělá inteligence
+opravdu dokáže. Zprvu tým čítal pouze pár studentů navštěvujících Thrunův seminář, ale rychle
+se rozrostl na 9 členů katedry a více než 50 studentů. S různými úpravami konstrukce a ovládání
+vozidla pomáhal také tým inženýrů z Volkswagenu.
+
+\section{Konstrukce}
+
+\subsection{Automobil}
+Jako základní platforma byl vybrán automobil Volkswagen Touareg a to hlavně proto že již disponoval systémem
+tzv. \uv{drive-by-wire} - to znamená, že ovládací prvky nejsou propojené mechanicky, ale pouze slouží jako
+elektronické senzory pro palubní počítač, který pak pokyny vykonává \uv{po drátě} pomocí serv a elektromagnetů.
+To bylo pro vývoj samořídícího vozidlo ideální, protože týmu odpadla starost o tvorbu rozhraní mezi AI
+a fyzickým světem.
+
+\subsection{Senzory}
+Hlavní datový zdroj je pětice LIDARů umístěných na střeše. Ty jsou velice přesné ale pouze zhruba do 30
+metrů, na větší vzdálenosti jsou proto doplněny optickými kamerami. Dále obsahuje GPS, gyroskopy či
+velice přesný otáčkoměr na kolech, sloužící k měření rychlosti a ujeté vzdálenosti i při výpadku GPS.
+
+\subsection{Počítač}
+Nejdůležitější částí je samozřejmě hlavní počítač. Jednou z hlavních myšlenek při návrhu byla redundance,
+takže se skládá ze šesti Linuxových počítačů s úspornými procesory Pentium M. Jsou propojené tak, že byl
+Stanley schopný dokončit závod i pokud by jeden či dva selhaly. 
+
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\columnwidth]{pic/stanley-computer.jpg}
+    \caption{Stanleyho počítač}
+    \label{fig:computer}
+\end{figure}
+
+\subsection{Umělá inteligence}
+Největší inovace, kterou Thrunův tým vymyslel, byla ve sběru a zpracování dat ze senzorů. Jiné týmy
+věnovali obrovské úsilí zajištění co nejpřesnějších měření, odstraňování šumu či složitému stabilizování
+kamer a LIDARů pomocí gyroskopů, aby vyvážily jízdu po nerovném terénu. Z těchto dat se poté snažili
+pravidlovými algoritmy rozpoznávat objekty a vypočítávat nejvhodnější trasu.
+
+Naproti tomu Thrun se smířil s tím, že data vždy budou nějak nepřesná, a proto spolu s hlavním programátorem
+Michaelem Montemerlem vytvářeli software tak, aby dokázal tyto nepřesnosti sám filtrovat. Nejprve ho
+natrénovali na záznamech ze senzorů, když automobil řídil člověk, a poté ho nechali syrová data samostatně
+interpretovat, aniž by vytvářeli přesná pravidla - moderní strojové učení.
+
+\section{Závod}
+Do závodu z kvalifikačních kol postoupilo celkem 23 vozidel. Hlavními favority byla dvě vozidla týmů
+z Carnegie Mellon University. Ovšem přibližně ve třetině závodu Stanley obě předjel a po celkových šesti
+hodinách s velkým náskokem závod vyhrál. I ostatní vozidla dopadla velice dobře, 4 další závod dokončily
+(mezi nimi i obě z CMU) a všechna kromě jednoho překonaly rekord z prvního ročníku.
+
+\section{Závěr}
+Závod je mnohými považován za významný milník pro robotizaci a umělou inteligenci a často je přirovnáván
+k legendárnímu šachovému zápasu Deep Blue versus Kasparov, kdy počítač poprvé porazil nejlepšího člověka. 
+
+DARPA dále organizovala závody v čím dál tím náročnějších podmínkách: DARPA Urban Challenge 2007,
+kde si vozidla musela poradit s městským prostředí, různé robotické soutěže, soutěže v mapování podzemí
+a neúspěšnou soutěž v odpalech vesmírných raket.
+
+Sebastian Thrun spolu s několika blízkými kolegy u autonomních vozidel zůstali i dále. Jejich další vozidlo
+\uv{Junior} obsadilo druhé místo ve výše zmíněné Urban Challenge a poté se podíleli např. na projektu Waymo
+od Googlu. 
+
+\section{Zdroje}
+
+\begin{enumerate}
+    \item \href{https://www.wired.com/2006/01/stanley/}{WIRED: Say Hello to Stanley}
+    \item \href{https://web.archive.org/web/20070510134920/http://www.popsci.com/popsci/darpachallenge/6182640a662c6010vgnvcm1000004eecbccdrcrd.html}{Popsci: DARPA Grand Challenge 2004}
+    \item \href{https://en.wikipedia.org/wiki/Stanley_(vehicle)}{Wikipedia: Stanley}
+    \item \href{https://web.archive.org/web/20090114213826/http://www.darpa.mil/GRANDCHALLENGE/overview.asp}{DARPA: Urban Challenge}
+    \item \href{https://web.archive.org/web/20061113154833/http://www.popularmechanics.com/science/robotics/2169012.html?page=1}{Popular Mechanics: DARPA Grand Challenge Winner} 
+    \item \href{https://en.wikipedia.org/wiki/DARPA_Grand_Challenge}{Wikipedia: DARPA Grand Challenge}
+    \item Obrázek \ref{fig:title}: \url{https://jenikirbyhistory.getarchive.net/amp/media/the-winner-2005-darpa-grand-challenge-stanfords-stanley-a13cb4}
+    \item Obrázek \ref{fig:computer}: By Steve Jurvetson from Los Altos, USA - pimp my ride, CC BY 2.0, \url{https://commons.wikimedia.org/w/index.php?curid=97524991}
+\end{enumerate}
+
+\end{document}
