@@ -3,15 +3,15 @@
 [DATABASE_VERSION]
 "2.8" 
 [PROJECT_DETAILS]
-"Altmann_A23B0264P" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\Altmann_A23B0264P.hwp" "H8S,H8/300" "KPIT GNUH8 [ELF]" "C Application" "2600" "Other" 
+"Altmann_A23B0264P" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\Altmann_A23B0264P.hwp" "H8S,H8/300" "KPIT GNUH8 [ELF]" "C Application" "2600" "Other" 
 [INFORMATION]
 "No project information available" 
 [TOOL_CHAIN]
 "KPIT GNUH8 [ELF] Toolchain" "v11.02" 
 [CONFIGURATIONS]
-"Debug" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\Debug" 
-"Release" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\Release" 
-"SimDebug_H8S-2600A" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\SimDebug_H8S-2600A" 
+"Debug" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\Debug" 
+"Release" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\Release" 
+"SimDebug_H8S-2600A" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\SimDebug_H8S-2600A" 
 [BUILD_PHASES]
 "GNU Assembler" 1 
 "GNU Compiler" 1 
@@ -132,7 +132,7 @@
 "Object file" "GNU Linker" "GNU Assembler" 
 "Object file" "GNU Linker" "GNU Compiler" 
 [PROJECT_FILES]
-"C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\main.s" "User" "Assembly source file" 2 
+"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "User" "Assembly source file" 2 
 [FOLDER]
 "Assembly source file" "Assembly source file" 
 "C header file" "C header file" 
@@ -185,15 +185,15 @@
 [ON_DEMAND_COMPONENTS_LOADED]
 [SYNC_SESSION_NAMES]
 [SESSIONS]
-"DefaultSession" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\DefaultSession.hsf" 0 
-"SimSession" "C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\SimSession.hsf" 0 
+"DefaultSession" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\DefaultSession.hsf" 0 
+"SimSession" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\SimSession.hsf" 0 
 [GENERAL_DATA_SESSION_DefaultSession]
 [GENERAL_DATA_SESSION_SimSession]
 [OPTIONS_Debug_GNU Assembler]
 "Assembly source file" "011924b061240d10" 5 
 "C source file" "011924b061240d10" 4 
 "C++ source file" "011924b061240d10" 3 
-"C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\main.s" "011924b061240d10" 5 
+"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "011924b061240d10" 5 
 "Preprocess Assembly file" "011924b061240d10" 2 
 "Single Shot" "011924b061240d10" 1 
 "Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
@@ -223,7 +223,7 @@
 "Assembly source file" "011924b061240d10" 5 
 "C source file" "011924b061240d10" 4 
 "C++ source file" "011924b061240d10" 3 
-"C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\main.s" "011924b061240d10" 5 
+"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "011924b061240d10" 5 
 "Preprocess Assembly file" "011924b061240d10" 2 
 "Single Shot" "011924b061240d10" 1 
 "Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
@@ -252,7 +252,7 @@
 "Assembly source file" "011924b061240d10" 5 
 "C source file" "011924b061240d10" 4 
 "C++ source file" "011924b061240d10" 3 
-"C:\WorkSpace\Workspace_POT\MAIN\Altmann_A23B0264P\main.s" "011924b061240d10" 5 
+"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "011924b061240d10" 5 
 "Preprocess Assembly file" "011924b061240d10" 2 
 "Single Shot" "011924b061240d10" 1 
 "Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
