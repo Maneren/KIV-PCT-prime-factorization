@@ -30,8 +30,8 @@
 \end{figure}
 
 \begin{center}
-    \LARGE{Prvočíselný rozklad}\\
     \vspace{.5cm}
+    \LARGE{Prvočíselný rozklad}\\
 \end{center}
 
 \vfill
@@ -75,10 +75,7 @@ Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
 
 \section{Implementace řešení}
 
-\subsection{Hlavní část programu}
-
-% make the text monospace
-
+\subsection{Hlavní části programu}
 
 Hlavní část programu je rozdělena na 2 části: inicializace a smyčka. Inicializace programu
 zahrnuje především spuštění podprogramu \code{generate\_prime\_sieve}, který vygeneruje seznam 
@@ -86,6 +83,20 @@ prvočísel. Smyčka pak postupně požádá uživatele o vstup, vstup zpracuje 
 \code{ascii\_decode}, který zadané číslo převede z textu na binarní hodnotu. Následně je zavolán
 podprogram \code{prime\_factorize}, který vypočítá samotný prvočíselný rozklad. Nakonec je
 rozklad vytištěn a smyčka se spustí znovu od začátku.
+
+\subsection{Podprogramy}
+
+\subsubsection{\code{\_start}}
+
+\subsubsection{\code{generate\_prime\_sieve}}
+
+\subsubsection{\code{prime\_factorize}}
+
+\subsubsection{\code{ascii\_decode}}
+
+\subsubsection{\code{ascii\_encode}}
+
+\subsubsection{\code{fill\_buffer}}
 
 
 \section{DARPA Grand Challenge}
@@ -124,13 +135,6 @@ takže se skládá ze šesti Linuxových počítačů s úspornými procesory Pe
 Stanley schopný dokončit závod i pokud by jeden či dva selhaly. 
 
 
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\columnwidth]{pic/stanley-computer.jpg}
-    \caption{Stanleyho počítač}
-    \label{fig:computer}
-\end{figure}
-
 \subsection{Umělá inteligence}
 Největší inovace, kterou Thrunův tým vymyslel, byla ve sběru a zpracování dat ze senzorů. Jiné týmy
 věnovali obrovské úsilí zajištění co nejpřesnějších měření, odstraňování šumu či složitému stabilizování
@@ -159,18 +163,5 @@ a neúspěšnou soutěž v odpalech vesmírných raket.
 Sebastian Thrun spolu s několika blízkými kolegy u autonomních vozidel zůstali i dále. Jejich další vozidlo
 \uv{Junior} obsadilo druhé místo ve výše zmíněné Urban Challenge a poté se podíleli např. na projektu Waymo
 od Googlu. 
-
-\section{Zdroje}
-
-\begin{enumerate}
-    \item \href{https://www.wired.com/2006/01/stanley/}{WIRED: Say Hello to Stanley}
-    \item \href{https://web.archive.org/web/20070510134920/http://www.popsci.com/popsci/darpachallenge/6182640a662c6010vgnvcm1000004eecbccdrcrd.html}{Popsci: DARPA Grand Challenge 2004}
-    \item \href{https://en.wikipedia.org/wiki/Stanley_(vehicle)}{Wikipedia: Stanley}
-    \item \href{https://web.archive.org/web/20090114213826/http://www.darpa.mil/GRANDCHALLENGE/overview.asp}{DARPA: Urban Challenge}
-    \item \href{https://web.archive.org/web/20061113154833/http://www.popularmechanics.com/science/robotics/2169012.html?page=1}{Popular Mechanics: DARPA Grand Challenge Winner} 
-    \item \href{https://en.wikipedia.org/wiki/DARPA_Grand_Challenge}{Wikipedia: DARPA Grand Challenge}
-    \item Obrázek \ref{fig:title}: \url{https://jenikirbyhistory.getarchive.net/amp/media/the-winner-2005-darpa-grand-challenge-stanfords-stanley-a13cb4}
-    \item Obrázek \ref{fig:computer}: By Steve Jurvetson from Los Altos, USA - pimp my ride, CC BY 2.0, \url{https://commons.wikimedia.org/w/index.php?curid=97524991}
-\end{enumerate}
 
 \end{document}
