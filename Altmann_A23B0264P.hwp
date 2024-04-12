@@ -3,15 +3,14 @@
 [DATABASE_VERSION]
 "2.8" 
 [PROJECT_DETAILS]
-"Altmann_A23B0264P" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\Altmann_A23B0264P.hwp" "H8S,H8/300" "KPIT GNUH8 [ELF]" "C Application" "2600" "Other" 
+"Altmann_A23B0264P" "C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P" "C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\Altmann_A23B0264P.hwp" "H8S,H8/300" "KPIT GNUH8 [ELF]" "C Application" "2600" "Other" 
 [INFORMATION]
 "No project information available" 
 [TOOL_CHAIN]
 "KPIT GNUH8 [ELF] Toolchain" "v11.02" 
 [CONFIGURATIONS]
-"Debug" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\Debug" 
-"Release" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\Release" 
-"SimDebug_H8S-2600A" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\SimDebug_H8S-2600A" 
+"Debug" "C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\Debug" 
+"Release" "C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\Release" 
 [BUILD_PHASES]
 "GNU Assembler" 1 
 "GNU Compiler" 1 
@@ -132,7 +131,7 @@
 "Object file" "GNU Linker" "GNU Assembler" 
 "Object file" "GNU Linker" "GNU Compiler" 
 [PROJECT_FILES]
-"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "User" "Assembly source file" 2 
+"C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\main.s" "User" "Assembly source file" 2 
 [FOLDER]
 "Assembly source file" "Assembly source file" 
 "C header file" "C header file" 
@@ -185,15 +184,15 @@
 [ON_DEMAND_COMPONENTS_LOADED]
 [SYNC_SESSION_NAMES]
 [SESSIONS]
-"DefaultSession" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\DefaultSession.hsf" 0 
-"SimSession" "C:\WorkSpace\POT_Workspace\PCT-prime-factorization\SimSession.hsf" 0 
+"DefaultSession" "C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\DefaultSession.hsf" 0 
+"SimSession" "C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\SimSession.hsf" 0 
 [GENERAL_DATA_SESSION_DefaultSession]
 [GENERAL_DATA_SESSION_SimSession]
 [OPTIONS_Debug_GNU Assembler]
 "Assembly source file" "011924b061240d10" 5 
 "C source file" "011924b061240d10" 4 
 "C++ source file" "011924b061240d10" 3 
-"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "011924b061240d10" 5 
+"C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\main.s" "011924b061240d10" 5 
 "Preprocess Assembly file" "011924b061240d10" 2 
 "Single Shot" "011924b061240d10" 1 
 "Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
@@ -223,7 +222,7 @@
 "Assembly source file" "011924b061240d10" 5 
 "C source file" "011924b061240d10" 4 
 "C++ source file" "011924b061240d10" 3 
-"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "011924b061240d10" 5 
+"C:\WorkSpace\Altmann_A23B0264P\Altmann_A23B0264P\main.s" "011924b061240d10" 5 
 "Preprocess Assembly file" "011924b061240d10" 2 
 "Single Shot" "011924b061240d10" 1 
 "Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
@@ -248,35 +247,6 @@
 [EXCLUDED_FILES_Release]
 [LINKAGE_ORDER_Release]
 [GENERAL_DATA_CONFIGURATION_Release]
-[OPTIONS_SimDebug_H8S-2600A_GNU Assembler]
-"Assembly source file" "011924b061240d10" 5 
-"C source file" "011924b061240d10" 4 
-"C++ source file" "011924b061240d10" 3 
-"C:\WorkSpace\POT_Workspace\PCT-prime-factorization\main.s" "011924b061240d10" 5 
-"Preprocess Assembly file" "011924b061240d10" 2 
-"Single Shot" "011924b061240d10" 1 
-"Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
-[OPTIONS_SimDebug_H8S-2600A_GNU Compiler]
-"C source file" "011924b061240d10" 4 
-"C++ source file" "011924b061240d10" 3 
-"Preprocess Assembly file" "011924b061240d10" 2 
-"Single Shot" "011924b061240d10" 1 
-"Z:\home\maneren\Programming\zcu\pct\Workspace_POT\Altmann_A23B0264P\vects.c" "011924b061240d10" 4 
-[OPTIONS_SimDebug_H8S-2600A_GNU Library Generator]
-"Single Shot" "011924b061240d10" 1 
-[OPTIONS_SimDebug_H8S-2600A_GNU Linker]
-"Single Shot" "011924b061240d10" 6 
-[OPTIONS_SimDebug_H8S-2600A]
-"" 0 
-"[V|VERSION|2] [B|DONTLINK|1] [S|ENDIAN|BIG] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [I|DEBUGLV|2] [S|DEBUGFT|Native] [S|DEFINES|DEBUG] [S|PROJECTTYPE|CAPPPROJECT] [S|CPUTYPE|H8/S2600] [S|CPU|2600A:24] [B|OPTIMIZEDLIB|1] [B|MRELAX|0] [B|MINT32|0] [S|INCDIR|^"$(TCINSTALL)\h8300-elf\h8300-elf\optlibinc^"|^"$(TCINSTALL)\h8300-elf\lib\gcc\h8300-elf\4.5-GNUH8_v11.02\optlibinc^"] [B|NOSTDINC|1] [B|OPTIMIZE|0] [I|OPTLV|2] [B|DEBUG|1] [S|OUTPUT|OBJECT] [B|DOOPTLIB|1] " 2 
-"[V|VERSION|2] [B|DONTLINK|1] [S|ENDIAN|BIG] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [I|DEBUGLV|2] [S|DEBUGFT|Native] [S|DEFINES|DEBUG] [S|PROJECTTYPE|CAPPPROJECT] [S|CPUTYPE|H8/S2600] [S|CPU|2600A:24] [B|OPTIMIZEDLIB|1] [B|MRELAX|0] [B|MINT32|0] [S|INCDIR|^"$(TCINSTALL)\h8300-elf\h8300-elf\optlibinc^"|^"$(TCINSTALL)\h8300-elf\lib\gcc\h8300-elf\4.5-GNUH8_v11.02\optlibinc^"] [B|NOSTDINC|1] [B|TREATCPP|1] [B|OPTIMIZE|0] [I|OPTLV|2] [B|DEBUG|1] [S|OUTPUT|OBJECT] [B|DOOPTLIB|1] " 3 
-"[V|VERSION|2] [B|DONTLINK|1] [S|ENDIAN|BIG] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [I|DEBUGLV|2] [S|DEBUGFT|Native] [S|DEFINES|DEBUG] [S|PROJECTTYPE|CAPPPROJECT] [S|CPUTYPE|H8/S2600] [S|CPU|2600A:24] [B|OPTIMIZEDLIB|1] [B|MRELAX|0] [B|MINT32|0] [S|INCDIR|^"$(TCINSTALL)\h8300-elf\h8300-elf\optlibinc^"|^"$(TCINSTALL)\h8300-elf\lib\gcc\h8300-elf\4.5-GNUH8_v11.02\optlibinc^"] [B|NOSTDINC|1] [B|TREATC|1] [B|OPTIMIZE|0] [I|OPTLV|2] [B|DEBUG|1] [S|OUTPUT|OBJECT] [B|DOOPTLIB|1] " 4 
-"[V|VERSION|2] [B|DOPROJBUILT|0] [S|MODE|BUILD/CHANGED] [I|OPTTYPE|1] [S|OUTPUTPATH|^"$(CONFIGDIR)\lib$(PROJECTNAME).a^"] [B|STDIO|1] [B|STDLIB|1] [B|STRING|1] [S|CPUTYPE|H8/S2600] [S|ENDIAN|BIG] [B|DOOPTLIB|1] [B|OPTIMIZE|1] " 1 
-"[V|VERSION|2] [S|ENDIAN|BIG] [S|OUTFORM|BOTH] [S|PLMFILE|^"$(CONFIGDIR)\$(PROJECTNAME).map^"] [S|ESTART|-e _start] [S|OUTFILE|^"$(CONFIGDIR)\$(PROJECTNAME).x^"] [B|RSARCH|1] [S|PROJECTTYPE|CAPPPROJECT] [S|CPUTYPE|H8/S2600] [S|ARCHIVE|liboptm.a*liboptc.a*libgcc.a] [S|INCDIR|^"$(TCINSTALL)\h8300-elf\lib\gcc\h8300-elf\4.5-GNUH8_v11.02\h8300s^"|^"$(TCINSTALL)\h8300-elf\h8300-elf\lib\h8300s^"] [S|GROUPDET|.vects|0|0||1|0x00000000|0|1|0|.vects|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.text|0|0||1|0x00000400|0|0|0|.text|All-files|<<FEND>>|0|.text.*|All-files|<<FEND>>|1|etext|<<FEND>>|<<CEND>>|<<GEND>>|.init|0|0||0||0|0|0|.init|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.fini|0|0||0||0|0|0|.fini|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.got|0|0||0||0|0|0|.got|All-files|<<FEND>>|0|.got.plt|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.rodata|0|0||0||0|0|0|.rodata|All-files|<<FEND>>|0|.rodata.*|All-files|<<FEND>>|1|_erodata|<<FEND>>|<<CEND>>|<<GEND>>|.eh_frame_hdr|0|0||0||0|0|0|.eh_frame_hdr|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.eh_frame|0|0||0||0|0|0|.eh_frame|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.jcr|0|0||0||0|0|0|.jcr|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.tors|0|0||0||0|0|1|__CTOR_LIST__|<<FEND>>|1|___ctors|<<FEND>>|0|.ctors|All-files|<<FEND>>|1|___ctors_end|<<FEND>>|1|__CTOR_END__|<<FEND>>|1|__DTOR_LIST__|<<FEND>>|1|___dtors|<<FEND>>|0|.dtors|All-files|<<FEND>>|1|___dtors_end|<<FEND>>|1|__DTOR_END__|<<FEND>>|1|_mdata|<<FEND>>|<<CEND>>|<<GEND>>|.data|0|2|_mdata|1|0x00FF4000|0|0|1|_data|<<FEND>>|0|.data|All-files|<<FEND>>|0|.data.*|All-files|<<FEND>>|1|_edata|<<FEND>>|<<CEND>>|<<GEND>>|.gcc_exc|0|0||0||0|0|0|.gcc_exc|All-files|<<FEND>>|<<CEND>>|<<GEND>>|.bss|0|0||0||0|0|1|_bss|<<FEND>>|0|.bss|All-files|<<FEND>>|0|COMMON|All-files|<<FEND>>|1|_ebss|<<FEND>>|1|_end|<<FEND>>|<<CEND>>|<<GEND>>|.stack|0|0||1|0x00FFC000|0|0|1|_stack|<<FEND>>|<<CEND>>|<<GEND>>] [S|PROJECTTYPE|CAPPPROJECT] [B|MFILEGEN|1] [B|SUBCOMMAND|0] [B|FIXUPLIBS|1] [B|DOOPTLIB|1] [B|DOPROJBUILT|0] [S|CPUTYPE|H8/S2600] " 6 
-"[V|VERSION|2] [S|OBJPATH|^"$(CONFIGDIR)\$(FILELEAF).o^"] [S|ENDIAN|BIG] [I|DEBUGLV|2] [B|LINCHLS|1] [B|LINCASS|1] [B|LINCSYM|1] [S|LFILE|^"$(CONFIGDIR)\$(FILELEAF).lis^"] [S|PROJECTTYPE|CAPPPROJECT] [S|CPUTYPE|H8/S2600] [S|CPU|2600A:24] [S|INCDIR|^"$(PROJDIR)^"] " 5 
-[EXCLUDED_FILES_SimDebug_H8S-2600A]
-[LINKAGE_ORDER_SimDebug_H8S-2600A]
-[GENERAL_DATA_CONFIGURATION_SimDebug_H8S-2600A]
 [GENERAL_DATA_CONFIGURATION_SESSION_Debug_DefaultSession]
 [SESSION_DATA_CONFIGURATION_SESSION_Debug_DefaultSession]
 "MEMORY_MAPPING_OPTIONS" "" 
@@ -288,12 +258,6 @@
 "MEMORY_MAPPING_OPTIONS" "" 
 [GENERAL_DATA_CONFIGURATION_SESSION_Release_SimSession]
 [SESSION_DATA_CONFIGURATION_SESSION_Release_SimSession]
-"MEMORY_MAPPING_OPTIONS" "" 
-[GENERAL_DATA_CONFIGURATION_SESSION_SimDebug_H8S-2600A_DefaultSession]
-[SESSION_DATA_CONFIGURATION_SESSION_SimDebug_H8S-2600A_DefaultSession]
-"MEMORY_MAPPING_OPTIONS" "" 
-[GENERAL_DATA_CONFIGURATION_SESSION_SimDebug_H8S-2600A_SimSession]
-[SESSION_DATA_CONFIGURATION_SESSION_SimDebug_H8S-2600A_SimSession]
 "MEMORY_MAPPING_OPTIONS" "" 
 [EXT_DEBUGGER_INFO]
 0 "" "" "" "" 
