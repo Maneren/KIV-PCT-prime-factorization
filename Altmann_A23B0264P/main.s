@@ -1,4 +1,4 @@
-	; Prevod cisla z desitkove do hex. soustavy
+	; Rozklad cisla na prvocinitele
 
 	.h8300s
 
