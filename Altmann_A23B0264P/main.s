@@ -85,6 +85,10 @@ main_loop:
 	mov.l #input_buffer, ER6
 	jsr   @ascii_decode
 
+	;     if the number is less than 2, skip
+	cmp.w #2, R0
+	blo   main_loop_skip
+
 	;     print 'n='
 	mov.l #output_buffer, ER6
 	jsr   @ascii_encode
