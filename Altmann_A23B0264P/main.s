@@ -64,7 +64,7 @@ _start:
 	;     initialize the sieve
 	mov.l #sieve, ER6
 	mov.l #primes, ER5
-	jsr   @generate_prime_sieve
+	jsr   @prime_sieve
 
 	; loop for the rest of the program
 
@@ -119,7 +119,7 @@ end:
 
 	; ----------- functions -----------
 
-	; fn generate_prime_sieve
+	; fn prime_sieve
 
 	; generates a prime sieve from 0 to 255
 	; fills the output buffer with found primes, leaving the rest empty
@@ -127,7 +127,7 @@ end:
 	; <- @ER5 - pointer to output buffer (64B)
 	; <- @ER6 - pointer to working buffer (256B)
 
-generate_prime_sieve:
+prime_sieve:
 	push.l ER0
 	push.l ER1
 	push.l ER2
@@ -154,37 +154,37 @@ generate_prime_sieve:
 	;     prepare R1 (copy space)
 	xor.w R1, R1
 
-generate_prime_sieve_loop:
+prime_sieve_loop:
 	;     check if the number is marked as prime
 	mov.b @ER6, R1L
 	cmp.b #0, R1L
 	;     if it isn't, go to the next number
-	beq   generate_prime_sieve_loop_skip
+	beq   prime_sieve_loop_skip
 
 	mov.b R0L, @ER5
 	inc.l #1, ER5
 
-	jsr @generate_prime_sieve_mark_multiples
+	jsr @prime_sieve_mark_multiples
 
-generate_prime_sieve_loop_skip:
+prime_sieve_loop_skip:
 
 	cmp.w #255, R0
-	bge   generate_prime_sieve_end
+	bge   prime_sieve_end
 
 	;     increase the number until we reach 256
 	inc.b R0L
 	inc.l #1, ER6
 
-	jmp generate_prime_sieve_loop
+	jmp prime_sieve_loop
 
-generate_prime_sieve_end:
+prime_sieve_end:
 	pop.l ER2
 	pop.l ER1
 	pop.l ER0
 
 	rts
 
-	; fn generate_prime_sieve_mark_multiples
+	; fn prime_sieve_mark_multiples
 
 	; marks all multiples of the number as 0
 
@@ -193,27 +193,27 @@ generate_prime_sieve_end:
 	; <- R0 - number
 	; <- @ER6 - pointer to the buffer + the number
 
-generate_prime_sieve_mark_multiples:
+prime_sieve_mark_multiples:
 	;      store the original pointer
 	push.l ER6
 
 	;     save current number for iteration
 	mov.w R0, E1
 
-generate_prime_sieve_mark_loop:
+prime_sieve_mark_loop:
 	;     step through the sieve in multiples of the current number
 	;     until we reach the end of the sieve (256)
 	add.l ER0, ER6
 	add.w R0, E1
 	cmp.w #256, E1
-	bge   generate_prime_sieve_mark_loop_end
+	bge   prime_sieve_mark_loop_end
 
 	;     mark them as 0
 	mov.b R1H, @ER6
 
-	jmp generate_prime_sieve_mark_loop
+	jmp prime_sieve_mark_loop
 
-generate_prime_sieve_mark_loop_end:
+prime_sieve_mark_loop_end:
 	;     restore the original pointer
 	pop.l ER6
 	rts
