@@ -57,7 +57,6 @@ Semestrální práce - PCT \hfill \today
 
 \section{Zadání}
 
-
 Číslo 15 - "Rozklad čísla na prvočinitele"
 
 Uživatel zadá číslo v rozsahu 2-65536 a program vypíše jeho rozklad na prvočinitele.
@@ -83,91 +82,103 @@ Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
 
 \subsection{Hlavní části programu}
 
-Hlavní část programu je rozdělena na 2 části: inicializace a smyčka. Inicializace programu
-zahrnuje především spuštění podprogramu \code{generate\_prime\_sieve}, který vygeneruje seznam 
-prvočísel. Smyčka pak postupně požádá uživatele o vstup, vstup zpracuje pomocí podprogramu 
-\code{ascii\_decode}, který zadané číslo převede z textu na binarní hodnotu. Následně je zavolán
-podprogram \code{prime\_factorize}, který vypočítá samotný prvočíselný rozklad. Nakonec je
-rozklad vytištěn a smyčka se spustí znovu od začátku.
+Hlavní část programu je rozdělena na 2 části: inicializace a hlavní smyčka. Inicializace programu
+zahrnuje nastavení registru \code{ER7} aby ukazoval na zásobník a spuštění podprogramu
+\code{generate\_prime\_sieve}, který vygeneruje seznam prvočísel. Smyčka pak postupně požádá
+uživatele o vstup, vstup zpracuje pomocí podprogramu \code{ascii\_decode}, který zadané číslo
+převede z textu na binarní hodnotu. Následně je zavolán podprogram \code{prime\_factorize}, který
+vypočítá samotný prvočíselný rozklad. Nakonec je rozklad vytištěn a smyčka se spustí znovu od
+začátku.
 
 \subsection{Podprogramy}
 
 \subsubsection{\code{\_start}}
 
+Vstupní bod do programu. Zajištuje inicializaci, komunikaci s uživatelem a volá ostatní
+podprogramy.
+
+Během inicializace připravý seznam prvočísel do \code{primes}
+
+V hlavní smyčce nejprve vypíše \code{prompt}, která užívatele požáda o vstup. Ten pak následně
+přečte pomocí systémového volání \code{GETS}. Vstup převede na číslo podprogramem
+\code{ascii\_decode} a s tim pak zavolá podprogram \code{prime\_factorize}. Nakonec do výstupního
+bufferu připíše znak "Enter" a celý buffer pomocí \code{PUTS} vypíše.
+
 \subsubsection{\code{generate\_prime\_sieve}}
+
+Pomocí Erastothenova síta vypočítá prvočísla v rozsahu 2-256.
+
+Na vstup přebírá 2 ukazatele, v \code{ER5} ukazatel na výstupní buffer do kterého budou vkládána
+nalezená prvočísla a v \code{ER6} ukazatel na prázdný buffer, ve kterém bude dočasně uloženo
+Erastothenovo síto.
+
+\subsubsection{\code{generate\_prime\_sieve\_mark\_multiples}}
+
+Pomocný podprogram pro \code{generate\_prime\_sieve}. Označí v Erastothenovu sítu všechny násobky
+daného čísla jako čísla složená.
+
+Přebírá 2 argumenty. V \code{R0} číslo jehož násobky má označit a v \code{ER6} ukazatel na síto.
 
 \subsubsection{\code{prime\_factorize}}
 
+Vypíše rozklad daného čísla.
+
+Přebírá 3 argumenty. V \code{R0} číslo, které má rozložit, v \code{ER5} ukazatel na seznam 
+prvočísel a v \code{ER6} ukazatel na výstupní buffer.
+
+Postupně čte prvočísla ze seznamu a zadané číslo se jimi snaží vydělit. Pokud to jde beze zbytku,
+spočítá kolikrát to šlo. Poté tuto informaci převede do ascii a uloží do výstupního bufferu.
+Nakonec vezme další prvočíslo a tento proces opakuje, do té doby než je výsledek po dělení 1.
+
+Pokud mezitím dojde na konec seznamu prvočísel, znamená to, že zbývající hodnota je také prvočíslo,
+a tedy ho také vypíše.
+
 \subsubsection{\code{ascii\_decode}}
+
+Pomocný podprogram, který převede textové číslo o zadaném základu na binarní hodnotu.
+
+Načítá z bufferu \code{ER6}, dokud nenarazí na konec řádku. Poté zadané číslo převede na binární
+hodnotu (podle základu \code{R1}) a výsledek uloží do \code{R0}.
 
 \subsubsection{\code{ascii\_encode}}
 
+Pomocný podprogram, který převede binární hodnotu na textové číslo o zadaném základu.
+
+Číslo \code{R0} převede na ascii text (o základu \code{R1}) a výsledek uloží do bufferu \code{ER6}.
+
 \subsubsection{\code{fill\_buffer}}
 
+Pomocný podprogram, který do bufferu \code{ER6} uloží \code{E0} bajtů s hodnotu \code{R0}.
 
-\section{DARPA Grand Challenge}
-Její počátek je v roce 2003, kdy americká Agentura ministerstva obrany pro pokročilé výzkumné projekty
-(DARPA) nabídla odměnu 1 milion dolarů, tomu kdo dokáže sestavit autonomní vozidlo schopné projet
-150 mil dlouhou trať vedoucí v Nevadské poušti.
+Hodnota \code{R0} musí být celé slovo a \code{E0} musí být sudý počet bajtů.
 
-První ročník se konal v roce 2004 ale během závodu se ukázalo, že je to zatím úkol příliš náročný
-a nakonec žádné vozidlo závod nedokázalo dokončit (nejlepší ujelo necelých 5\% trati) a tak DARPA
-zdvojnásobila výhru pro další ročník na 2 miliony.
+\section{Ovládání programu}
 
-\section{Stanfordský závodní tým}
-Byl založen ředitelem Stanfordské laboratoře umělé inteligence, profesorem Sebastianem Thrunem,
-údajně proto, že byl zklamaný výsledky prvního závodu a chtěl ukázat, co robotika a umělá inteligence
-opravdu dokáže. Zprvu tým čítal pouze pár studentů navštěvujících Thrunův seminář, ale rychle
-se rozrostl na 9 členů katedry a více než 50 studentů. S různými úpravami konstrukce a ovládání
-vozidla pomáhal také tým inženýrů z Volkswagenu.
+Uživatel zadá do konzole číslo v rozsahu 2-65535. Program vypíše rozklad daného čísla.
 
-\section{Konstrukce}
+\section{Definované proměnné}
 
-\subsection{Automobil}
-Jako základní platforma byl vybrán automobil Volkswagen Touareg a to hlavně proto že již disponoval systémem
-tzv. \uv{drive-by-wire} - to znamená, že ovládací prvky nejsou propojené mechanicky, ale pouze slouží jako
-elektronické senzory pro palubní počítač, který pak pokyny vykonává \uv{po drátě} pomocí serv a elektromagnetů.
-To bylo pro vývoj samořídícího vozidlo ideální, protože týmu odpadla starost o tvorbu rozhraní mezi AI
-a fyzickým světem.
+% tabulka
 
-\subsection{Senzory}
-Hlavní datový zdroj je pětice LIDARů umístěných na střeše. Ty jsou velice přesné ale pouze zhruba do 30
-metrů, na větší vzdálenosti jsou proto doplněny optickými kamerami. Dále obsahuje GPS, gyroskopy či
-velice přesný otáčkoměr na kolech, sloužící k měření rychlosti a ujeté vzdálenosti i při výpadku GPS.
+\section{Obsah registru \code{SP} a zásobníku}
 
-\subsection{Počítač}
-Nejdůležitější částí je samozřejmě hlavní počítač. Jednou z hlavních myšlenek při návrhu byla redundance,
-takže se skládá ze šesti Linuxových počítačů s úspornými procesory Pentium M. Jsou propojené tak, že byl
-Stanley schopný dokončit závod i pokud by jeden či dva selhaly. 
+Program byl zastaven na řádce 181 (konec podprogramu \code{generate\_prime\_sieve}).
 
-
-\subsection{Umělá inteligence}
-Největší inovace, kterou Thrunův tým vymyslel, byla ve sběru a zpracování dat ze senzorů. Jiné týmy
-věnovali obrovské úsilí zajištění co nejpřesnějších měření, odstraňování šumu či složitému stabilizování
-kamer a LIDARů pomocí gyroskopů, aby vyvážily jízdu po nerovném terénu. Z těchto dat se poté snažili
-pravidlovými algoritmy rozpoznávat objekty a vypočítávat nejvhodnější trasu.
-
-Naproti tomu Thrun se smířil s tím, že data vždy budou nějak nepřesná, a proto spolu s hlavním programátorem
-Michaelem Montemerlem vytvářeli software tak, aby dokázal tyto nepřesnosti sám filtrovat. Nejprve ho
-natrénovali na záznamech ze senzorů, když automobil řídil člověk, a poté ho nechali syrová data samostatně
-interpretovat, aniž by vytvářeli přesná pravidla - moderní strojové učení.
-
-\section{Závod}
-Do závodu z kvalifikačních kol postoupilo celkem 23 vozidel. Hlavními favority byla dvě vozidla týmů
-z Carnegie Mellon University. Ovšem přibližně ve třetině závodu Stanley obě předjel a po celkových šesti
-hodinách s velkým náskokem závod vyhrál. I ostatní vozidla dopadla velice dobře, 4 další závod dokončily
-(mezi nimi i obě z CMU) a všechna kromě jednoho překonaly rekord z prvního ročníku.
+% tabulka
 
 \section{Závěr}
-Závod je mnohými považován za významný milník pro robotizaci a umělou inteligenci a často je přirovnáván
-k legendárnímu šachovému zápasu Deep Blue versus Kasparov, kdy počítač poprvé porazil nejlepšího člověka. 
 
-DARPA dále organizovala závody v čím dál tím náročnějších podmínkách: DARPA Urban Challenge 2007,
-kde si vozidla musela poradit s městským prostředí, různé robotické soutěže, soutěže v mapování podzemí
-a neúspěšnou soutěž v odpalech vesmírných raket.
+Samotné řešení mi po prečtení dokumentace a vzorových projektu na CW nedělalo značné problémy, bylo
+spíše pracné a zdlouhavé než náročné. Nejproblematičtější byla organizace programu do logických
+podprogramů, rozřazení hodnot do vhodných registrů a následné předávání argumentů mezi nimi. To se
+nejvíce projevilo v podprogramu \code{prime\_factorize}, který používá nejvíce registrů.
 
-Sebastian Thrun spolu s několika blízkými kolegy u autonomních vozidel zůstali i dále. Jejich další vozidlo
-\uv{Junior} obsadilo druhé místo ve výše zmíněné Urban Challenge a poté se podíleli např. na projektu Waymo
-od Googlu. 
+Další značný problém činilo prostředí HEW. Nejdříve jeho mizernou podporou operačního systému Linux
+a poté nepřehledností a neintuitivitou ovládání a nastavení. Na druhou stranu musím ocenit velmi
+nápomocné návody na CW, které pomohly při rešení velké části těchto problémů. Také se mi velmi
+líbil zabudovaný simulátor a debugger, bez kterého by pro mě bylo téměř nemožné program vytvořit.
+
+Celkově mě projekt spíše bavil a myslím si, že i když na procesor H8S v praxi nikdy nenarazím,
+budou mi naučené principy JSA užitečné.
 
 \end{document}
