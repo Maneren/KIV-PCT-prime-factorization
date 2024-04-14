@@ -5,9 +5,12 @@
 \usepackage{hyphsubst}
 \usepackage{graphicx}
 \usepackage{indentfirst}
-\selectlanguage{czech}
-\PassOptionsToPackage{hyphens}{url}\usepackage{hyperref}
+\usepackage{microtype}
 
+\selectlanguage{czech}
+\PassOptionsToPackage{hyphens}{url}
+
+\usepackage{hyperref}
 \hypersetup{
     colorlinks=true,
     linkcolor=black,
@@ -18,9 +21,12 @@
 }
 \urlstyle{same}
 
+% define helper command for typesetting code
 \usepackage{xcolor}
 \definecolor{light-gray}{gray}{0.95}
 \newcommand{\code}[1]{\colorbox{light-gray}{\mbox{\texttt{#1}}}}
+
+\chardef\_=`_
 
 \begin{document}
 
