@@ -87,7 +87,7 @@ main_loop:
 
 	;     if the number is less than 2, skip
 	cmp.w #2, R0
-	blo   main_loop_skip
+	blo   main_loop
 
 	;     print 'n='
 	mov.l #output_buffer, ER6
