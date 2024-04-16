@@ -131,53 +131,50 @@ prime_sieve:
 	push.l ER0
 	push.l ER1
 	push.l ER2
+	push.l ER3
 
-	;      save the pointer
-	push.l ER6
+	;     store end of sieve
+	mov.l ER6, ER3
+	add.l #256, ER3
+
+	;     skip 0 and 1
+	inc.l #2, ER6
 
 	;     set all bytes in sieve to 1
 	mov.w #0xFFFF, R0
-	mov.w #254, E0
-	inc.l #2, ER6
+	mov.l #254, ER1
 	jsr   @fill_buffer
-
-	;     reset the pointer
-	pop.l ER6
 
 	;     clear iterator and filler
 	xor.l ER0, ER0
+	xor.l ER1, ER1
 
-	;     start at 2 and mark all multiples as 0
+	;     first prime is 2
 	mov.b #2, R0L
-	add.l #2, ER6
-
-	;     prepare R1 (copy space)
-	xor.w R1, R1
 
 prime_sieve_loop:
-	;     check if the number is marked as prime
+	;     if the number is marked 0, skip it
 	mov.b @ER6, R1L
-	cmp.b #0, R1L
-	;     if it isn't, go to the next number
-	beq   prime_sieve_loop_skip
+	beq   prime_sieve_loop_next
 
+	;     add the number to prime list
 	mov.b R0L, @ER5
 	inc.l #1, ER5
 
 	jsr @prime_sieve_mark_multiples
 
-prime_sieve_loop_skip:
-
-	cmp.w #255, R0
-	bge   prime_sieve_end
-
-	;     increase the number until we reach 256
+prime_sieve_loop_next:
+	;     loop until we reach 256 (overflow)
 	inc.b R0L
+	bvs   prime_sieve_end
+
+	;     move the sieve pointer
 	inc.l #1, ER6
 
 	jmp prime_sieve_loop
 
 prime_sieve_end:
+	pop.l ER3
 	pop.l ER2
 	pop.l ER1
 	pop.l ER0
@@ -191,22 +188,18 @@ prime_sieve_end:
 	; !!! overwrites ER0-2
 
 	; <- R0 - number
-	; <- @ER6 - pointer to the buffer + the number
+	; <- @ER3 - pointer to the end of the sieve
+	; <- @ER6 - pointer to the sieve + the number
 
 prime_sieve_mark_multiples:
-	;      store the original pointer
 	push.l ER6
-
-	;     save current number for iteration
-	mov.w R0, E1
 
 prime_sieve_mark_loop:
 	;     step through the sieve in multiples of the current number
-	;     until we reach the end of the sieve (256)
+	;     until we reach the end of the sieve (ER5)
 	add.l ER0, ER6
-	add.w R0, E1
-	cmp.w #256, E1
-	bge   prime_sieve_mark_loop_end
+	cmp.l ER3, ER6
+	bcc   prime_sieve_mark_loop_end
 
 	;     mark them as 0
 	mov.b R1H, @ER6
@@ -233,8 +226,8 @@ prime_factorize:
 	push.l ER4
 
 	;     prepare the registers
-	xor.w E3, E3
 	xor.l ER2, ER2
+	xor.w E3, E3
 	xor.l ER4, ER4
 
 	; loop through the primes and try to divide the number
@@ -245,8 +238,8 @@ prime_factorize_loop:
 	;     load the prime
 	mov.b @ER5, R2L
 
-	cmp.b #0, R2L
-	beq   prime_factorize_print_remaining
+	;   if it is 0, we are at the end of the list
+	beq prime_factorize_print_remaining
 
 prime_factorize_division_loop:
 
@@ -256,7 +249,7 @@ prime_factorize_division_loop:
 	;       divide the number by the prime
 	divxu.w R2, ER3
 
-	;     if the remain after division isn't 0, end the loop
+	;     if the remainder after division isn't 0, end the loop
 	cmp.w #0, E3
 	bne   prime_factorize_division_loop_end
 
@@ -319,7 +312,6 @@ prime_factorize_print_remaining:
 prime_factorize_end:
 	;     if we have an asterisk at the end, remove it
 	mov.b @(-1, ER6), R0L
-
 	cmp.b #'*', R0L
 	bne   prime_factorize_end_skip_asterisk
 
@@ -329,10 +321,9 @@ prime_factorize_end:
 	mov.b R0L, @ER6
 
 prime_factorize_end_skip_asterisk:
-
+	pop.l ER4
 	pop.l ER3
 	pop.l ER2
-	pop.l ER4
 
 	rts
 
@@ -401,8 +392,8 @@ ascii_encode_push_loop:
 	;     convert the number to ascii
 	add.b #'0', R2L
 
-	;      store the char on the stack
-	push.w R2
+	;     store the char on the stack
+	mov.b R2L, @-ER7
 
 	;     increase the character counter
 	inc.w #1, E2
@@ -414,20 +405,16 @@ ascii_encode_push_loop:
 ascii_encode_pop_loop:
 	; pop all chars from the stack to the output buffer
 
-	;     pop the char
-	pop.w R2
-
-	;     store the char in the output buffer
+	;     pop and store
+	mov.b @ER7+, R2L
 	mov.b R2L, @ER6
 
 	;     move the pointer
 	inc.l #1, ER6
 
-	;     decrease the counter
+	;     loop until the counter is 0
 	dec.w #1, E2
-
-	;   loop until the counter is 0
-	bne ascii_encode_pop_loop
+	bne   ascii_encode_pop_loop
 
 ascii_encode_end:
 	pop.l ER2
@@ -440,23 +427,22 @@ ascii_encode_end:
 	; length has to be even number of bytes
 
 	; <- R0 - value
-	; <- E0 - number of bytes
+	; <- ER1 - number of bytes
 	; <- @ER6 - pointer to buffer
 
 fill_buffer:
-	;     if
-	cmp.w #0, E0
-	beq   fill_buffer_end
+	push.l ER5
+	mov.l  ER6, ER5
+	add.l  ER1, ER6
 
 fill_buffer_loop:
 	;     store the byte
-	mov.w R0, @ER6
-
-	inc.l #2, ER6
-	dec.w #2, E0
+	mov.w R0, @-ER6
+	cmp.l ER6, ER5
 	bne   fill_buffer_loop
 
 fill_buffer_end:
+	pop.l ER5
 	rts
 
 	.end
