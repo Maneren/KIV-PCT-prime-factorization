@@ -67,11 +67,13 @@ prvočinitele.
 
 Program nejprve vygeneruje
 \href{https://cs.wikipedia.org/wiki/Eratosthenovo_s%C3%ADto}{Erastothenovo
-	síto} a pomocí něj najde prvočísla v rozsahu 2-256. Poté v nekonečné smyčce
-načítá vstup od uživatele a vypisuje příslušný rozklad.
+	síto} a pomocí něj najde prvočísla v rozsahu 2-255. Poté v nekonečné smyčce
+načítá vstup od uživatele a vypisuje příslušný rozklad. Ten vypočítá jednoduše
+tak, že bude číslo opakovaně zkoušet dělit prvočísly ze seznamu.
 
-Program bude fungovat se všemi čísly v zadaném rozsahu, ale očekává od uživatele
-správný vstup. V opačném případě buď vrací chybu nebo špatný výsledek.
+Program bude fungovat se všemi čísly v zadaném rozsahu 2-65535, ale očekává od
+uživatele správný vstup. V opačném případě buď vrací chybu nebo špatný
+výsledek.
 
 \section{Vývoj a použité technologie}
 
@@ -86,13 +88,16 @@ Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
 \subsection{Hlavní části programu}
 
 Hlavní část programu je rozdělena na 2 části: inicializace a hlavní smyčka.
+
 Inicializace programu zahrnuje nastavení registru \code{ER7} aby ukazoval na
 zásobník a spuštění podprogramu \code{prime\_sieve}, který vygeneruje seznam
-prvočísel. Smyčka pak postupně požádá uživatele o vstup, vstup zpracuje pomocí
+prvočísel.
+
+Smyčka pak postupně požádá uživatele o vstup, vstup zpracuje pomocí
 podprogramu \code{ascii\_decode}, který zadané číslo převede z textu na binarní
 hodnotu. Následně je zavolán podprogram \code{prime\_factorize}, který vypočítá
-samotný prvočíselný rozklad. Nakonec je rozklad vytištěn a smyčka se spustí
-znovu od začátku.
+a vypíše samotný prvočíselný rozklad. Nakonec se smyčka spustí znovu od
+začátku.
 
 \subsection{Podprogramy}
 
@@ -101,7 +106,8 @@ znovu od začátku.
 Vstupní bod do programu. Zajištuje inicializaci, komunikaci s uživatelem a volá
 ostatní podprogramy.
 
-Během inicializace připravý seznam prvočísel do \code{primes}
+Během inicializace nastaví \code{SP} na návěští \code{stack} a pomocí
+podprogramu \code{prime\_sieve} vygeneruje seznam prvočísel \code{primes}.
 
 V hlavní smyčce nejprve vypíše \code{prompt}, který uživatele požádá o vstup.
 Ten pak přečte pomocí systémového volání \code{GETS}. Vstup převede na číslo
@@ -119,10 +125,11 @@ buffer, ve kterém bude dočasně uloženo Erastothenovo síto.
 
 \subsubsection{\code{prime\_sieve\_mark\_multiples}}
 
-Pomocný podprogram pro \code{prime\_sieve}. Označí v Erastothenovu sítu všechny násobky daného
-čísla jako čísla složená.
+Označí v sítu všechny násobky daného čísla jako čísla složená.
 
-Přebírá 2 argumenty. V \code{R0} číslo jehož násobky má označit a v \code{ER6} ukazatel na síto.
+Přebírá 2 argumenty. V \code{R0L} číslo jehož násobky má označit, v \code{ER5}
+a \code{ER6} ukazatele na konec a začátek oblasti, ve které mají být násobky
+označeny.
 
 \subsubsection{\code{prime\_factorize}}
 
@@ -184,7 +191,7 @@ Neobsahuje konstanty systémového volaní \code{syscall}, \code{GETS} a
 
 \section{Obsah registru \code{SP} a zásobníku}
 
-Program byl zastaven na řádce 184 (konec podprogramu \code{prime\_sieve}).
+Program byl zastaven na řádce 173 (konec podprogramu \code{prime\_sieve}).
 
 \begin{table}[H]
 	\centering
@@ -195,7 +202,11 @@ Program byl zastaven na řádce 184 (konec podprogramu \code{prime\_sieve}).
 	\end{tabular}
 \end{table}
 
-
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.95\textwidth]{pic/memory.png}
+	\end{center}
+\end{figure}
 
 Návratová adresa z podprogramu \code{prime\_sieve} je \code{0x416}.
 
