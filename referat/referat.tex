@@ -18,7 +18,6 @@
     filecolor=magenta,      
     urlcolor=blue,
     pdftitle={Prvočíselný rozklad},
-    pdfpagemode=FullScreen,
 }
 \urlstyle{same}
 
@@ -27,11 +26,12 @@
 
 \chardef\_=`_
 
+% increase spacing between table rows
 \renewcommand{\arraystretch}{1.25}
 
 \begin{document}
 
-\begin{figure}[h!]
+\begin{figure}[H]
 	\centering
 	\includegraphics[width=0.8\textwidth]{pic/LOGO_KIV_CMYK.png}
 \end{figure}
@@ -63,13 +63,14 @@ Semestrální práce - PCT \hfill \today
 Uživatel zadá číslo v rozsahu 2-65536 a program vypíše jeho rozklad na
 prvočinitele.
 
-\subsection{Navrhnuté řešení}
+\subsection{Navržené řešení}
 
-Program nejprve vygeneruje Erastothenovo síto a pomocí něj najde prvočísla v
-rozsahu 2-256. Poté v nekonečné smyčce načítá vstup od uživatele, převádí ho na
-číslo a vypisuje příslušný rozklad.
+Program nejprve vygeneruje
+\href{https://cs.wikipedia.org/wiki/Eratosthenovo_s%C3%ADto}{Erastothenovo
+	síto} a pomocí něj najde prvočísla v rozsahu 2-256. Poté v nekonečné smyčce
+načítá vstup od uživatele a vypisuje příslušný rozklad.
 
-Program funguje se všemi čísly v zadaném rozsahu, ale očekává od uživatele
+Program bude fungovat se všemi čísly v zadaném rozsahu, ale očekává od uživatele
 správný vstup. V opačném případě buď vrací chybu nebo špatný výsledek.
 
 \section{Vývoj a použité technologie}
@@ -183,8 +184,7 @@ Neobsahuje konstanty systémového volaní \code{syscall}, \code{GETS} a
 
 \section{Obsah registru \code{SP} a zásobníku}
 
-Program byl zastaven na řádce 184 (konec podprogramu \code{\_prime\_sieve}).
-
+Program byl zastaven na řádce 184 (konec podprogramu \code{prime\_sieve}).
 
 \begin{table}[H]
 	\centering
@@ -195,25 +195,29 @@ Program byl zastaven na řádce 184 (konec podprogramu \code{\_prime\_sieve}).
 	\end{tabular}
 \end{table}
 
-Návratová adresa z podprogramu \code{\_prime\_sieve} je \code{0x416}.
 
+
+Návratová adresa z podprogramu \code{prime\_sieve} je \code{0x416}.
 
 \section{Závěr}
+
+Program zvládá rozkládat čísla mezi 2 a 65535 (včetně) na provočísla a tedy
+splňuje zadání.
 
 Samotné řešení mi po prečtení dokumentace a vzorových projektu na CW nedělalo
 značné problémy, bylo spíše pracné a zdlouhavé než náročné. Nejproblematičtější
 byla organizace programu do logických podprogramů, rozřazení hodnot do vhodných
-registrů a následné předávání argumentů mezi nimi. To se nejvíce projevilo v
-podprogramu \code{prime\_factorize}, který používá nejvíce registrů.
+registrů a následné předávání argumentů mezi nimi, tak aby se mi hodnoty někde
+nepřepisovali. To se nejvíce projevilo v podprogramu \code{prime\_factorize},
+který používá nejvíce registrů.
 
-Další značný problém činilo prostředí HEW. Nejdříve jeho mizernou podporou
-operačního systému Linux a poté nepřehledností a neintuitivitou ovládání a
-nastavení. Na druhou stranu musím ocenit velmi nápomocné návody na CW, které
-pomohly při rešení velké části těchto problémů. Také se mi velmi líbil
-zabudovaný simulátor a debugger, bez kterého by pro mě bylo téměř nemožné
-program vytvořit.
+Další problém jsem měl s prostředím HEW. Nejdříve s jeho podporou operačního
+systému Linux, poté s nepřehledností a neintuitivitou ovládání a nastavení. Na
+druhou stranu musím ocenit velmi nápomocné návody na CW, které pomohly při
+rešení velké části těchto problémů. Také se mi velmi líbil zabudovaný simulátor
+a debugger, bez kterého by bylo řešení mnohem složitější.
 
 Celkově mě projekt spíše bavil a myslím si, že i když na procesor H8S v praxi
-nikdy nenarazím, budou mi naučené principy JSA užitečné.
+nikdy nenarazím, budou mi naučené obecné principy JSA užitečné.
 
 \end{document}
