@@ -60,22 +60,23 @@ Semestrální práce - PCT \hfill \today
 
 Číslo 15 - "Rozklad čísla na prvočinitele"
 
-Uživatel zadá číslo v rozsahu 2-65536 a program vypíše jeho rozklad na prvočinitele.
+Uživatel zadá číslo v rozsahu 2-65536 a program vypíše jeho rozklad na
+prvočinitele.
 
 \subsection{Navrhnuté řešení}
 
-Program nejprve vygeneruje Erastothenovo síto a pomocí něj najde prvočísla v rozsahu 2-256.
-Poté v nekonečné smyčce načítá vstup od uživatele, převádí ho na číslo a vypisuje příslušný
-rozklad.
+Program nejprve vygeneruje Erastothenovo síto a pomocí něj najde prvočísla v
+rozsahu 2-256. Poté v nekonečné smyčce načítá vstup od uživatele, převádí ho na
+číslo a vypisuje příslušný rozklad.
 
-Program funguje se všemi čísly v zadaném rozsahu, ale očekává od uživatele správný vstup.
-V opačném případě buď vrací chybu nebo špatný výsledek.
+Program funguje se všemi čísly v zadaném rozsahu, ale očekává od uživatele
+správný vstup. V opačném případě buď vrací chybu nebo špatný výsledek.
 
 \section{Vývoj a použité technologie}
 
-K psaní programu byl využitý textový editor Neovim s rozšířením pro jazyky symbolických
-adres. K testování a debugování bylo následně použito vývojové prostředí HEW (High-performace
-embedded workshop) a simulátor procesoru H8S.
+K psaní programu byl využitý textový editor Neovim s rozšířením pro jazyky
+symbolických adres. K testování a debugování bylo následně použito vývojové
+prostředí HEW (High-performace embedded workshop) a simulátor procesoru H8S.
 
 Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
 
@@ -83,34 +84,37 @@ Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
 
 \subsection{Hlavní části programu}
 
-Hlavní část programu je rozdělena na 2 části: inicializace a hlavní smyčka. Inicializace programu
-zahrnuje nastavení registru \code{ER7} aby ukazoval na zásobník a spuštění podprogramu
-\code{prime\_sieve}, který vygeneruje seznam prvočísel. Smyčka pak postupně požádá uživatele o
-vstup, vstup zpracuje pomocí podprogramu \code{ascii\_decode}, který zadané číslo převede z textu
-na binarní hodnotu. Následně je zavolán podprogram \code{prime\_factorize}, který vypočítá samotný
-prvočíselný rozklad. Nakonec je rozklad vytištěn a smyčka se spustí znovu od začátku.
+Hlavní část programu je rozdělena na 2 části: inicializace a hlavní smyčka.
+Inicializace programu zahrnuje nastavení registru \code{ER7} aby ukazoval na
+zásobník a spuštění podprogramu \code{prime\_sieve}, který vygeneruje seznam
+prvočísel. Smyčka pak postupně požádá uživatele o vstup, vstup zpracuje pomocí
+podprogramu \code{ascii\_decode}, který zadané číslo převede z textu na binarní
+hodnotu. Následně je zavolán podprogram \code{prime\_factorize}, který vypočítá
+samotný prvočíselný rozklad. Nakonec je rozklad vytištěn a smyčka se spustí
+znovu od začátku.
 
 \subsection{Podprogramy}
 
 \subsubsection{\code{\_start}}
 
-Vstupní bod do programu. Zajištuje inicializaci, komunikaci s uživatelem a volá ostatní
-podprogramy.
+Vstupní bod do programu. Zajištuje inicializaci, komunikaci s uživatelem a volá
+ostatní podprogramy.
 
 Během inicializace připravý seznam prvočísel do \code{primes}
 
-V hlavní smyčce nejprve vypíše \code{prompt}, který uživatele požádá o vstup. Ten pak přečte pomocí
-systémového volání \code{GETS}. Vstup převede na číslo podprogramem \code{ascii\_decode} a
-zavolá podprogram \code{prime\_factorize}. Nakonec do výstupního bufferu připíše znak \code{LF} a
-celý buffer pomocí \code{PUTS} vypíše.
+V hlavní smyčce nejprve vypíše \code{prompt}, který uživatele požádá o vstup.
+Ten pak přečte pomocí systémového volání \code{GETS}. Vstup převede na číslo
+podprogramem \code{ascii\_decode} a zavolá podprogram \code{prime\_factorize}.
+Nakonec do výstupního bufferu připíše znak \code{LF} a celý buffer pomocí
+\code{PUTS} vypíše.
 
 \subsubsection{\code{prime\_sieve}}
 
 Pomocí Erastothenova síta vypočítá prvočísla v rozsahu 2-256.
 
-Na vstup přebírá 2 ukazatele, v \code{ER5} ukazatel na výstupní buffer do kterého budou vkládána
-nalezená prvočísla a v \code{ER6} ukazatel na prázdný buffer, ve kterém bude dočasně uloženo
-Erastothenovo síto.
+Na vstup přebírá 2 ukazatele, v \code{ER5} ukazatel na výstupní buffer do
+kterého budou vkládána nalezená prvočísla a v \code{ER6} ukazatel na prázdný
+buffer, ve kterém bude dočasně uloženo Erastothenovo síto.
 
 \subsubsection{\code{prime\_sieve\_mark\_multiples}}
 
@@ -124,23 +128,25 @@ Přebírá 2 argumenty. V \code{R0} číslo jehož násobky má označit a v \co
 Vypíše rozklad čísla \code{R0} do výstupního bufferu \code{ER6}. Využívá k tomu seznam prvočísel
 \code{ER5}.
 
-Postupně čte prvočísla ze seznamu a zadané číslo se jimi snaží vydělit. Pokud to jde beze zbytku,
-spočítá kolikrát to šlo. Poté tuto informaci převede do ASCII a uloží do výstupního bufferu.
-Nakonec vezme další prvočíslo a tento proces opakuje, do té doby než je výsledek po dělení 1.
+Postupně čte prvočísla ze seznamu a zadané číslo se jimi snaží vydělit. Pokud
+to jde beze zbytku, spočítá kolikrát to šlo. Poté tuto informaci převede do
+ASCII a uloží do výstupního bufferu. Nakonec vezme další prvočíslo a tento
+proces opakuje, do té doby než je výsledek po dělení 1.
 
-Pokud mezitím dojde na konec seznamu prvočísel, znamená to, že zbývající hodnota je také prvočíslo,
-a tedy ho také vypíše.
+Pokud mezitím dojde na konec seznamu prvočísel, znamená to, že zbývající
+hodnota je také prvočíslo, a tedy ho také vypíše.
 
 \subsubsection{\code{ascii\_decode}}
 
-Převede ASCII číslo z bufferu \code{ER6} o základu \code{R1} na hodnotu v registru \code{R0}.
+Převede ASCII číslo z bufferu \code{ER6} o základu \code{R1} na hodnotu v
+registru \code{R0}.
 
 Očekává že číslo \code{ER6} je ukončeno ASCII znakem \code{LF}.
 
 \subsubsection{\code{ascii\_encode}}
 
-Převede číselnou hodnotu \code{R0} na ASCII text v bufferu \code{ER6}
-podle základu \code{R1}.
+Převede číselnou hodnotu \code{R0} na ASCII text v bufferu \code{ER6} podle
+základu \code{R1}.
 
 \subsubsection{\code{fill\_buffer}}
 
@@ -150,11 +156,13 @@ Hodnota \code{R0} musí být celé slovo a \code{E0} musí být sudý počet baj
 
 \section{Ovládání programu}
 
-Uživatel zadá do konzole číslo v rozsahu 2-65535. Program vypíše rozklad daného čísla.
+Uživatel zadá do konzole číslo v rozsahu 2-65535. Program vypíše rozklad daného
+čísla.
 
 \section{Definované proměnné}
 
-Neobsahuje konstanty systémového volaní \code{syscall}, \code{GETS} a \code{PUTS}.
+Neobsahuje konstanty systémového volaní \code{syscall}, \code{GETS} a
+\code{PUTS}.
 
 \begin{table}[H]
 	\centering
@@ -192,17 +200,20 @@ Návratová adresa z podprogramu \code{\_prime\_sieve} je \code{0x416}.
 
 \section{Závěr}
 
-Samotné řešení mi po prečtení dokumentace a vzorových projektu na CW nedělalo značné problémy, bylo
-spíše pracné a zdlouhavé než náročné. Nejproblematičtější byla organizace programu do logických
-podprogramů, rozřazení hodnot do vhodných registrů a následné předávání argumentů mezi nimi. To se
-nejvíce projevilo v podprogramu \code{prime\_factorize}, který používá nejvíce registrů.
+Samotné řešení mi po prečtení dokumentace a vzorových projektu na CW nedělalo
+značné problémy, bylo spíše pracné a zdlouhavé než náročné. Nejproblematičtější
+byla organizace programu do logických podprogramů, rozřazení hodnot do vhodných
+registrů a následné předávání argumentů mezi nimi. To se nejvíce projevilo v
+podprogramu \code{prime\_factorize}, který používá nejvíce registrů.
 
-Další značný problém činilo prostředí HEW. Nejdříve jeho mizernou podporou operačního systému Linux
-a poté nepřehledností a neintuitivitou ovládání a nastavení. Na druhou stranu musím ocenit velmi
-nápomocné návody na CW, které pomohly při rešení velké části těchto problémů. Také se mi velmi
-líbil zabudovaný simulátor a debugger, bez kterého by pro mě bylo téměř nemožné program vytvořit.
+Další značný problém činilo prostředí HEW. Nejdříve jeho mizernou podporou
+operačního systému Linux a poté nepřehledností a neintuitivitou ovládání a
+nastavení. Na druhou stranu musím ocenit velmi nápomocné návody na CW, které
+pomohly při rešení velké části těchto problémů. Také se mi velmi líbil
+zabudovaný simulátor a debugger, bez kterého by pro mě bylo téměř nemožné
+program vytvořit.
 
-Celkově mě projekt spíše bavil a myslím si, že i když na procesor H8S v praxi nikdy nenarazím,
-budou mi naučené principy JSA užitečné.
+Celkově mě projekt spíše bavil a myslím si, že i když na procesor H8S v praxi
+nikdy nenarazím, budou mi naučené principy JSA užitečné.
 
 \end{document}
