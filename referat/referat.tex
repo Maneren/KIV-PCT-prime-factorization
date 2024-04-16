@@ -6,6 +6,7 @@
 \usepackage{graphicx}
 \usepackage{indentfirst}
 \usepackage{microtype}
+\usepackage{float}
 
 \selectlanguage{czech}
 \PassOptionsToPackage{hyphens}{url}
@@ -26,16 +27,18 @@
 
 \chardef\_=`_
 
+\renewcommand{\arraystretch}{1.25}
+
 \begin{document}
 
 \begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.8\textwidth]{pic/LOGO_KIV_CMYK.png}
+	\centering
+	\includegraphics[width=0.8\textwidth]{pic/LOGO_KIV_CMYK.png}
 \end{figure}
 
 \begin{center}
-    \vspace{.5cm}
-    \LARGE{Prvočíselný rozklad}\\
+	\vspace{.5cm}
+	\LARGE{Prvočíselný rozklad}\\
 \end{center}
 
 \vfill
@@ -82,11 +85,10 @@ Program je napsán v jazyku symbolických adres pro procesor Renesas H8S-2600A.
 
 Hlavní část programu je rozdělena na 2 části: inicializace a hlavní smyčka. Inicializace programu
 zahrnuje nastavení registru \code{ER7} aby ukazoval na zásobník a spuštění podprogramu
-\code{generate\_prime\_sieve}, který vygeneruje seznam prvočísel. Smyčka pak postupně požádá
-uživatele o vstup, vstup zpracuje pomocí podprogramu \code{ascii\_decode}, který zadané číslo
-převede z textu na binarní hodnotu. Následně je zavolán podprogram \code{prime\_factorize}, který
-vypočítá samotný prvočíselný rozklad. Nakonec je rozklad vytištěn a smyčka se spustí znovu od
-začátku.
+\code{prime\_sieve}, který vygeneruje seznam prvočísel. Smyčka pak postupně požádá uživatele o
+vstup, vstup zpracuje pomocí podprogramu \code{ascii\_decode}, který zadané číslo převede z textu
+na binarní hodnotu. Následně je zavolán podprogram \code{prime\_factorize}, který vypočítá samotný
+prvočíselný rozklad. Nakonec je rozklad vytištěn a smyčka se spustí znovu od začátku.
 
 \subsection{Podprogramy}
 
@@ -97,12 +99,12 @@ podprogramy.
 
 Během inicializace připravý seznam prvočísel do \code{primes}
 
-V hlavní smyčce nejprve vypíše \code{prompt}, která užívatele požáda o vstup. Ten pak následně
-přečte pomocí systémového volání \code{GETS}. Vstup převede na číslo podprogramem
-\code{ascii\_decode} a s tim pak zavolá podprogram \code{prime\_factorize}. Nakonec do výstupního
-bufferu připíše znak "Enter" a celý buffer pomocí \code{PUTS} vypíše.
+V hlavní smyčce nejprve vypíše \code{prompt}, který uživatele požádá o vstup. Ten pak přečte pomocí
+systémového volání \code{GETS}. Vstup převede na číslo podprogramem \code{ascii\_decode} a
+zavolá podprogram \code{prime\_factorize}. Nakonec do výstupního bufferu připíše znak \code{LF} a
+celý buffer pomocí \code{PUTS} vypíše.
 
-\subsubsection{\code{generate\_prime\_sieve}}
+\subsubsection{\code{prime\_sieve}}
 
 Pomocí Erastothenova síta vypočítá prvočísla v rozsahu 2-256.
 
@@ -110,22 +112,20 @@ Na vstup přebírá 2 ukazatele, v \code{ER5} ukazatel na výstupní buffer do k
 nalezená prvočísla a v \code{ER6} ukazatel na prázdný buffer, ve kterém bude dočasně uloženo
 Erastothenovo síto.
 
-\subsubsection{\code{generate\_prime\_sieve\_mark\_multiples}}
+\subsubsection{\code{prime\_sieve\_mark\_multiples}}
 
-Pomocný podprogram pro \code{generate\_prime\_sieve}. Označí v Erastothenovu sítu všechny násobky
-daného čísla jako čísla složená.
+Pomocný podprogram pro \code{prime\_sieve}. Označí v Erastothenovu sítu všechny násobky daného
+čísla jako čísla složená.
 
 Přebírá 2 argumenty. V \code{R0} číslo jehož násobky má označit a v \code{ER6} ukazatel na síto.
 
 \subsubsection{\code{prime\_factorize}}
 
-Vypíše rozklad daného čísla.
-
-Přebírá 3 argumenty. V \code{R0} číslo, které má rozložit, v \code{ER5} ukazatel na seznam 
-prvočísel a v \code{ER6} ukazatel na výstupní buffer.
+Vypíše rozklad čísla \code{R0} do výstupního bufferu \code{ER6}. Využívá k tomu seznam prvočísel
+\code{ER5}.
 
 Postupně čte prvočísla ze seznamu a zadané číslo se jimi snaží vydělit. Pokud to jde beze zbytku,
-spočítá kolikrát to šlo. Poté tuto informaci převede do ascii a uloží do výstupního bufferu.
+spočítá kolikrát to šlo. Poté tuto informaci převede do ASCII a uloží do výstupního bufferu.
 Nakonec vezme další prvočíslo a tento proces opakuje, do té doby než je výsledek po dělení 1.
 
 Pokud mezitím dojde na konec seznamu prvočísel, znamená to, že zbývající hodnota je také prvočíslo,
@@ -133,20 +133,18 @@ a tedy ho také vypíše.
 
 \subsubsection{\code{ascii\_decode}}
 
-Pomocný podprogram, který převede textové číslo o zadaném základu na binarní hodnotu.
+Převede ASCII číslo z bufferu \code{ER6} o základu \code{R1} na hodnotu v registru \code{R0}.
 
-Načítá z bufferu \code{ER6}, dokud nenarazí na konec řádku. Poté zadané číslo převede na binární
-hodnotu (podle základu \code{R1}) a výsledek uloží do \code{R0}.
+Očekává že číslo \code{ER6} je ukončeno ASCII znakem \code{LF}.
 
 \subsubsection{\code{ascii\_encode}}
 
-Pomocný podprogram, který převede binární hodnotu na textové číslo o zadaném základu.
-
-Číslo \code{R0} převede na ascii text (o základu \code{R1}) a výsledek uloží do bufferu \code{ER6}.
+Převede číselnou hodnotu \code{R0} na ASCII text v bufferu \code{ER6}
+podle základu \code{R1}.
 
 \subsubsection{\code{fill\_buffer}}
 
-Pomocný podprogram, který do bufferu \code{ER6} uloží \code{E0} bajtů s hodnotu \code{R0}.
+Do bufferu \code{ER6} uloží \code{E0} bajtů s hodnotu \code{R0}.
 
 Hodnota \code{R0} musí být celé slovo a \code{E0} musí být sudý počet bajtů.
 
@@ -156,13 +154,41 @@ Uživatel zadá do konzole číslo v rozsahu 2-65535. Program vypíše rozklad d
 
 \section{Definované proměnné}
 
-% tabulka
+Neobsahuje konstanty systémového volaní \code{syscall}, \code{GETS} a \code{PUTS}.
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|r|}
+		\hline
+		Název                 & adresa & velikost (B) \\ \hline
+		\code{sieve}          & FF4000 & 256          \\ \hline
+		\code{primes}         & FF4100 & 64           \\ \hline
+		\code{input\_buffer}  & FF4140 & 20           \\ \hline
+		\code{output\_buffer} & FF4154 & 20           \\ \hline
+		\code{prompt}         & FF4168 & 27           \\ \hline
+		\code{ptr\_input}     & FF4184 & 4            \\ \hline
+		\code{ptr\_output}    & FF4188 & 4            \\ \hline
+		\code{ptr\_prompt}    & FF418C & 4            \\ \hline
+		\code{stack}          & FF41F4 & 100          \\ \hline
+	\end{tabular}
+\end{table}
 
 \section{Obsah registru \code{SP} a zásobníku}
 
-Program byl zastaven na řádce 181 (konec podprogramu \code{generate\_prime\_sieve}).
+Program byl zastaven na řádce 184 (konec podprogramu \code{\_prime\_sieve}).
 
-% tabulka
+
+\begin{table}[H]
+	\centering
+	\begin{tabular}{|l|c|r|}
+		\hline
+		Registr    & adresa \\ \hline
+		\code{ER7} & FF41F0 \\ \hline
+	\end{tabular}
+\end{table}
+
+Návratová adresa z podprogramu \code{\_prime\_sieve} je \code{0x416}.
+
 
 \section{Závěr}
 
