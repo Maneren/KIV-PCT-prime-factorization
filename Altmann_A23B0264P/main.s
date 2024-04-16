@@ -51,7 +51,6 @@ ptr_prompt:
 	.space 100
 
 stack:
-	; stack end + 1
 
 	; ----------- program -------------
 
@@ -59,6 +58,7 @@ stack:
 	.global _start
 
 _start:
+	;     initialize SP
 	mov.l #stack, ER7
 
 	;     initialize the sieve
@@ -113,10 +113,6 @@ main_loop:
 
 	jmp main_loop
 
-end:
-	;   end with an infinite loop
-	jmp @end
-
 	; ----------- functions -----------
 
 	; fn prime_sieve
@@ -124,14 +120,12 @@ end:
 	; generates a prime sieve from 0 to 255
 	; fills the output buffer with found primes, leaving the rest empty
 
-	; <- @ER5 - pointer to output buffer (64B)
-	; <- @ER6 - pointer to working buffer (256B)
+	; <- @ER5 - output buffer (64B)
+	; <- @ER6 - sieve buffer (256B)
 
 prime_sieve:
-	push.l ER0
-	push.l ER1
-	push.l ER2
-	push.l ER3
+	;     save registers
+	stm.l ER0-ER3, @-ER7
 
 	;     store end of sieve
 	mov.l ER6, ER3
@@ -140,9 +134,8 @@ prime_sieve:
 	;     skip 0 and 1
 	inc.l #2, ER6
 
-	;     set all bytes in sieve to 1
+	;     set all bytes in sieve to FF
 	mov.w #0xFFFF, R0
-	mov.l #254, ER1
 	jsr   @fill_buffer
 
 	;     clear iterator and filler
@@ -174,22 +167,18 @@ prime_sieve_loop_next:
 	jmp prime_sieve_loop
 
 prime_sieve_end:
-	pop.l ER3
-	pop.l ER2
-	pop.l ER1
-	pop.l ER0
+	;     restore registers
+	ldm.l @ER7+, ER0-ER3
 
 	rts
 
 	; fn prime_sieve_mark_multiples
 
-	; marks all multiples of the number as 0
+	; marks all multiples of the number in given buffer
 
-	; !!! overwrites ER0-2
-
-	; <- R0 - number
-	; <- @ER3 - pointer to the end of the sieve
-	; <- @ER6 - pointer to the sieve + the number
+	; <- R0L - number
+	; <- @ER3 - end of the sieve
+	; <- @ER6 - sieve[number]
 
 prime_sieve_mark_multiples:
 	push.l ER6
@@ -207,8 +196,8 @@ prime_sieve_mark_loop:
 	jmp prime_sieve_mark_loop
 
 prime_sieve_mark_loop_end:
-	;     restore the original pointer
 	pop.l ER6
+
 	rts
 
 	; fn prime_factorize
@@ -221,6 +210,7 @@ prime_sieve_mark_loop_end:
 	; <- @ER6 - pointer to output buffer
 
 prime_factorize:
+	;      save registers
 	push.l ER2
 	push.l ER3
 	push.l ER4
@@ -427,22 +417,20 @@ ascii_encode_end:
 	; length has to be even number of bytes
 
 	; <- R0 - value
-	; <- ER1 - number of bytes
-	; <- @ER6 - pointer to buffer
+	; <- @ER3 - end of buffer
+	; <- @ER6 - start of buffer
 
 fill_buffer:
-	push.l ER5
-	mov.l  ER6, ER5
-	add.l  ER1, ER6
+	push.l ER3
 
 fill_buffer_loop:
 	;     store the byte
-	mov.w R0, @-ER6
-	cmp.l ER6, ER5
+	mov.w R0, @-ER3
+	cmp.l ER6, ER3
 	bne   fill_buffer_loop
 
 fill_buffer_end:
-	pop.l ER5
+	pop.l ER3
 	rts
 
 	.end
